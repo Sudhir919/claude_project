@@ -1,0 +1,36 @@
+Create a root-level .gitignore for this project.
+
+This project is a browser-based Todo application with an Agentic SDLC using Claude, Atlassian MCP, and GitHub.
+
+Exclude only:
+- .env files and environment secrets
+- OS-specific files
+- editor/IDE temporary files
+- Node/npm generated files if they appear
+- Python cache files
+- test/cache artifacts
+- local authentication or credential files
+
+Do NOT exclude any project files or Agentic SDLC files.
+
+The following must remain tracked:
+- .claude/agents/
+- .claude/prompts/
+- .claude/skills/
+- .claude/hooks/
+- CLAUDE.md
+- docs/
+- todo-app/
+- requirements.md
+- architecture.md
+- design-review.md
+- impl-plan.md
+- code-review.md
+- verification.md
+- PR.md
+- CHANGELOG.md
+
+Keep the .gitignore minimal.
+
+After creating it, read it and show me its complete contents.
+Do not run git add, git commit, or git push.
