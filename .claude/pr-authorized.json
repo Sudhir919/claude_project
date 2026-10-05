@@ -1,0 +1,7 @@
+{
+  "authorized": true,
+  "verification": "PASS",
+  "code_review": "APPROVED",
+  "hitl_gate_3": "APPROVED",
+  "pr_preparation": "COMPLETE"
+}

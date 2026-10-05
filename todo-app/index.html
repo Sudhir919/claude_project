@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Todo Application</h1>
+    <div class="app-container">
+        <h1>My Todos</h1>
 
-        <div class="input-section">
-            <input type="text" id="todoInput" placeholder="Enter a todo item">
-            <button id="addBtn">Add</button>
+        <div class="todo-form">
+            <input type="text" id="todoInput" placeholder="Enter a new todo...">
+            <button id="addButton">Add</button>
         </div>
 
-        <ul id="todoList"></ul>
+        <div id="todoList" class="todo-list">
+            <!-- Todos will be rendered here by JavaScript -->
+        </div>
     </div>
 
     <script src="app.js"></script>

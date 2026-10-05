@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "stop": {
+      "command": "powershell.exe",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${CLAUDE_PROJECT_DIR}\\.claude\\hooks\\create-pr.ps1"
+      ],
+      "description": "Automatically create GitHub PR after SDLC completion and authorization"
+    }
+  }
+}
