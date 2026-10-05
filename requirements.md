@@ -1,130 +1,111 @@
-# Todo Application Requirements
+# Todo Application - Requirements Document
+
+## Document Information
+
+- **Phase**: Requirements
+- **Date**: 2026-10-05
+- **Source**: Confluence User Story (docs/user-story.md)
+
+## Scope Statement
+
+This document defines the functional requirements for a simple Todo application that allows users to manage their todo items. The application supports three core operations: adding, editing, and deleting todo items.
 
 ## User Story
 
 As a user, I want to manage my todo items so that I can keep track of the tasks I need to complete.
 
-## Acceptance Criteria
-
-### AC-1: Add Todo
-
-Given the Todo application is open, when the user enters a todo item and selects Add, then the todo item should be added to the list.
-
-### AC-2: Edit Todo
-
-Given a todo item exists in the list, when the user selects Edit and updates the todo, then the todo item should display the updated text.
-
-### AC-3: Delete Todo
-
-Given a todo item exists in the list, when the user selects Delete, then the todo item should be removed from the list.
-
 ## Functional Requirements
 
-### FR-001: Add Todo Item
+### FR-1: Add Todo Item
 
-**Traceability:** AC-1
+**Source**: AC-1
 
-The system shall allow the user to add a new todo item to the list by entering text and selecting an Add action.
+**Description**: The system shall allow users to add a new todo item to the list.
 
-**Acceptance:**
-- User can enter todo item text
-- User can trigger an Add action
-- Todo item appears in the list after Add action is completed
+**Details**:
+- The user must be able to enter text for a todo item
+- The user must be able to trigger an Add action
+- Upon Add action, the entered todo item shall be added to the todo list
+- The todo item shall be visible in the list after being added
 
-### FR-002: Edit Todo Item
+**Testable Criteria**:
+- Given the Todo application is open
+- When the user enters a todo item and selects Add
+- Then the todo item should be added to the list
 
-**Traceability:** AC-2
+---
 
-The system shall allow the user to edit an existing todo item by selecting an Edit action, modifying the text, and saving the changes.
+### FR-2: Edit Todo Item
 
-**Acceptance:**
-- User can select an existing todo item for editing
-- User can modify the todo item text
-- Modified text is displayed in the list after edit is completed
+**Source**: AC-2
 
-### FR-003: Delete Todo Item
+**Description**: The system shall allow users to edit existing todo items in the list.
 
-**Traceability:** AC-3
+**Details**:
+- The user must be able to select an Edit action for an existing todo item
+- The user must be able to update the text of the todo item
+- Upon completion of the edit, the todo item shall display the updated text
+- The edited todo item shall remain in the list
 
-The system shall allow the user to delete an existing todo item from the list by selecting a Delete action.
+**Testable Criteria**:
+- Given a todo item exists in the list
+- When the user selects Edit and updates the todo
+- Then the todo item should display the updated text
 
-**Acceptance:**
-- User can select an existing todo item for deletion
-- User can trigger a Delete action
-- Todo item is removed from the list after Delete action is completed
+---
 
-## Traceability Matrix
+### FR-3: Delete Todo Item
+
+**Source**: AC-3
+
+**Description**: The system shall allow users to delete existing todo items from the list.
+
+**Details**:
+- The user must be able to select a Delete action for an existing todo item
+- Upon Delete action, the todo item shall be removed from the list
+- The deleted todo item shall no longer be visible in the list
+
+**Testable Criteria**:
+- Given a todo item exists in the list
+- When the user selects Delete
+- Then the todo item should be removed from the list
+
+---
+
+## Acceptance Criteria Traceability
 
 | Acceptance Criterion | Functional Requirement | Status |
 |---------------------|------------------------|--------|
-| AC-1: Add Todo | FR-001: Add Todo Item | Defined |
-| AC-2: Edit Todo | FR-002: Edit Todo Item | Defined |
-| AC-3: Delete Todo | FR-003: Delete Todo Item | Defined |
+| AC-1: Add Todo | FR-1: Add Todo Item | Covered |
+| AC-2: Edit Todo | FR-2: Edit Todo Item | Covered |
+| AC-3: Delete Todo | FR-3: Delete Todo Item | Covered |
 
-## Scope
+## Out of Scope
 
-### In Scope
+The following features are explicitly OUT OF SCOPE for this release:
 
-The Todo application includes the following features:
-
-1. Add a todo item to a list
-2. Edit an existing todo item in the list
-3. Delete a todo item from the list
-
-### Out of Scope
-
-The following features are explicitly out of scope for this application:
-
-- Todo item persistence (database, local storage, etc.)
-- User authentication or authorization
-- Multi-user support
-- Todo item priority or categorization
+- Marking todos as complete/incomplete
+- Todo prioritization or categorization
 - Due dates or reminders
-- Todo item completion status or checkboxes
+- Data persistence across sessions
+- User authentication or multi-user support
 - Search or filter functionality
-- Sorting capabilities
-- Data export or import
+- Todo reordering or sorting
+- Bulk operations
 - Undo/redo functionality
-- Drag and drop reordering
-- Mobile-specific features
-- Accessibility enhancements beyond basic standards
-- Internationalization or localization
-
-## Non-Functional Requirements
-
-### NFR-001: Usability
-
-The application shall provide a simple, intuitive interface for managing todo items.
-
-### NFR-002: Performance
-
-The application shall respond to user actions (add, edit, delete) without perceptible delay for lists containing up to 100 items.
-
-### NFR-003: Compatibility
-
-The application shall function in modern web browsers (Chrome, Firefox, Safari, Edge - latest two versions).
-
-## Ambiguities and Clarifications
-
-### Resolved Assumptions
-
-The following assumptions are made based on the user story:
-
-1. Todo items consist of text only (no additional metadata)
-2. The list displays all todo items without pagination
-3. Edit and Delete actions operate on individual todo items
-4. No confirmation is required for Delete action (not specified in AC-3)
-
-### Open Questions
-
-None. All acceptance criteria are clear and testable.
+- Export or import of todos
+- Sharing or collaboration features
 
 ## Requirements Verification
 
-All acceptance criteria from the user story have been mapped to functional requirements:
+- All acceptance criteria from the user story have been covered
+- Each functional requirement maps to exactly one acceptance criterion
+- No additional features have been introduced beyond the approved scope
+- All requirements are testable and verifiable
+- Requirements are clear and unambiguous
 
-- AC-1 → FR-001: Complete
-- AC-2 → FR-002: Complete
-- AC-3 → FR-003: Complete
+## Notes
 
-No additional features have been introduced beyond the approved user story.
+- This requirements document is derived from the approved Confluence user story located at docs/user-story.md
+- The scope is intentionally limited to three operations: Add, Edit, and Delete
+- Any additional features require approval through the requirements process

@@ -1,665 +1,1101 @@
-# Implementation Plan - Todo Application
+# Todo Application - Implementation Plan
 
-**Plan Date:** 2026-10-03  
-**Based On:** requirements.md v1.0, architecture.md v1.0, design-review.md (APPROVED)  
-**Target Files:** todo-app/index.html, todo-app/styles.css, todo-app/app.js
+## Document Information
 
-## 1. File Structure
+- **Phase**: Implementation Planning
+- **Date**: 2026-10-05
+- **Source**: requirements.md, architecture.md, design-review.md
+- **Status**: Ready for Implementation
+
+## Implementation Overview
+
+This implementation plan provides a dependency-ordered task breakdown for building the Todo application according to the approved architecture. All tasks map to the three functional requirements (FR-1, FR-2, FR-3) and follow the approved file structure.
+
+### File Structure
 
 ```
 todo-app/
-├── index.html      # Main HTML structure with input, buttons, and todo list
-├── styles.css      # Application styling for layout and appearance
-└── app.js          # Application logic: data structure and CRUD operations
+├── index.html      # UI Component - HTML structure
+├── styles.css      # Presentation Component - CSS styling
+└── app.js          # Application Logic + Data Layer - JavaScript
 ```
 
-## 2. Implementation Task List
+---
+
+## Task Breakdown
 
 ### Phase 1: Foundation Setup
 
-#### Task 1.1: Create HTML Structure
-**File:** `todo-app/index.html`  
-**Requirements:** Foundation for FR-001, FR-002, FR-003  
-**Dependencies:** None  
-**Priority:** P0 (Must be first)
-
-**Description:**
-Create the basic HTML5 document structure with:
-- DOCTYPE and html/head/body tags
-- Meta tags for charset and viewport
-- Title: "Todo Application"
-- Link to styles.css
-- Script tag for app.js (defer attribute)
-- Main container div with id="app"
-- Input field for todo text (id="todoInput")
-- Add button (id="addBtn")
-- Empty div/ul for todo list display (id="todoList")
-
-**Acceptance:**
-- Valid HTML5 document structure
-- All required elements present with correct IDs
-- CSS and JS files linked correctly
-- Document loads without errors in browser
+**Dependencies**: None  
+**Purpose**: Establish the basic project structure and file scaffolding
 
 ---
 
-#### Task 1.2: Create CSS Stylesheet
-**File:** `todo-app/styles.css`  
-**Requirements:** NFR-001 (Usability)  
-**Dependencies:** Task 1.1 (HTML structure must exist)  
-**Priority:** P0 (Foundation)
+#### Task 1.1: Create Directory Structure
 
-**Description:**
-Create basic styling for the todo application:
-- Reset/normalize basic styles
-- Center and layout the main container
-- Style the input field (width, padding, border)
-- Style the Add button (padding, background, cursor)
-- Style todo list items (layout, spacing)
-- Style Edit and Delete buttons for each todo item
-- Ensure clean, readable appearance
+**Description**: Create the todo-app directory to house all application files.
 
-**Acceptance:**
-- CSS file exists and is linked in HTML
-- Application has clean, usable appearance
-- Input field and buttons are clearly visible and clickable
-- Todo items are displayed in a readable list format
+**Requirements Mapping**: Infrastructure for FR-1, FR-2, FR-3
+
+**Acceptance Criteria**:
+- Directory `todo-app/` exists in project root
+- Directory is ready to contain index.html, styles.css, app.js
+
+**Blocking Tasks**: None
+
+**Files Created**:
+- `todo-app/` directory
 
 ---
 
-#### Task 1.3: Initialize JavaScript File and Data Structure
-**File:** `todo-app/app.js`  
-**Requirements:** Foundation for FR-001, FR-002, FR-003  
-**Dependencies:** Task 1.1 (HTML structure must exist)  
-**Priority:** P0 (Foundation)
+#### Task 1.2: Create HTML File Structure
 
-**Description:**
-Create the JavaScript file with:
-- Global `todos` array initialized as empty array
-- Todo object structure documented in comments: `{ id: Number, text: String }`
-- `initApp()` function that runs on DOMContentLoaded
-- Basic DOM element references (todoInput, addBtn, todoList)
-- Console.log to verify script loads correctly
+**Description**: Create index.html with basic HTML5 document structure and semantic elements.
 
-**Acceptance:**
-- app.js file exists and loads without errors
-- Global todos array is defined
-- initApp() function executes on page load
-- DOM elements are accessible via getElementById
-- No console errors
+**Requirements Mapping**: Foundation for FR-1, FR-2, FR-3 UI components
 
----
+**Acceptance Criteria**:
+- File `todo-app/index.html` exists
+- HTML5 doctype declaration present
+- `<head>` section with charset, viewport, title
+- `<body>` section ready for content
+- Links to styles.css and app.js included
+- Valid HTML5 structure
 
-### Phase 2: Core Rendering System
+**Blocking Tasks**: Task 1.1
 
-#### Task 2.1: Implement renderTodos() Function
-**File:** `todo-app/app.js`  
-**Requirements:** Foundation for FR-001, FR-002, FR-003 (all require display)  
-**Dependencies:** Task 1.1, Task 1.3  
-**Priority:** P1 (Core functionality)
-
-**Description:**
-Implement the `renderTodos()` function:
-- Clear existing content in todoList element
-- Iterate over todos array
-- For each todo, create a div/li element
-- Display todo text
-- Create Edit button with data-id attribute
-- Create Delete button with data-id attribute
-- Append todo element to todoList
-- Handle empty state (no todos message or empty list)
-
-**Acceptance:**
-- Function exists and can be called without errors
-- Empty todos array results in empty/placeholder display
-- Todos in array are rendered as HTML elements
-- Each todo has visible text and two buttons (Edit, Delete)
-- Buttons have correct data-id attributes matching todo id
-
----
-
-### Phase 3: Add Todo Feature (FR-001)
-
-#### Task 3.1: Implement addTodo() Function
-**File:** `todo-app/app.js`  
-**Requirements:** FR-001 (Add Todo Item)  
-**Dependencies:** Task 1.3, Task 2.1  
-**Priority:** P1 (Feature implementation)
-
-**Description:**
-Implement the `addTodo(text)` function:
-- Validate input: check if text is not empty/whitespace only
-- If invalid, return early (optionally show user feedback)
-- Create new todo object with:
-  - id: Use Date.now() for unique timestamp-based ID
-  - text: The provided text parameter
-- Push new todo object to todos array
-- Call renderTodos() to update display
-- Clear the input field after successful add
-
-**Acceptance:**
-- Function accepts text parameter
-- Empty or whitespace-only text is rejected (no todo created)
-- Valid text creates a todo object with unique id
-- Todo is added to todos array
-- renderTodos() is called automatically
-- Function works correctly when called programmatically
-
-**Traceability:** FR-001 → AC-1
-
----
-
-#### Task 3.2: Wire Add Button Event Listener
-**File:** `todo-app/app.js`  
-**Requirements:** FR-001 (Add Todo Item)  
-**Dependencies:** Task 1.1, Task 1.3, Task 3.1  
-**Priority:** P1 (Feature integration)
-
-**Description:**
-In `initApp()` function, add event listener for Add button:
-- Get reference to addBtn element
-- Add click event listener
-- On click, get value from todoInput element
-- Trim the value to remove extra whitespace
-- Call addTodo(trimmedValue)
-- Optional: Add Enter key listener on input field to trigger same action
-
-**Acceptance:**
-- Clicking Add button triggers addTodo()
-- Input value is correctly retrieved and passed to addTodo()
-- Input field is cleared after successful add
-- New todo appears in the list immediately
-- Enter key on input field also adds todo (if implemented)
-
-**Traceability:** FR-001 → AC-1
-
----
-
-### Phase 4: Delete Todo Feature (FR-003)
-
-#### Task 4.1: Implement deleteTodo() Function
-**File:** `todo-app/app.js`  
-**Requirements:** FR-003 (Delete Todo Item)  
-**Dependencies:** Task 1.3, Task 2.1  
-**Priority:** P1 (Feature implementation)
-
-**Description:**
-Implement the `deleteTodo(id)` function:
-- Accept id parameter (todo ID to delete)
-- Use Array.filter() to create new array excluding todo with matching id
-- Assign filtered array back to todos
-- Call renderTodos() to update display
-
-**Acceptance:**
-- Function accepts id parameter
-- Todo with matching id is removed from todos array
-- Other todos remain in array
-- renderTodos() is called automatically
-- Function works correctly when called programmatically with valid id
-
-**Traceability:** FR-003 → AC-3
-
----
-
-#### Task 4.2: Wire Delete Button Event Listeners
-**File:** `todo-app/app.js`  
-**Requirements:** FR-003 (Delete Todo Item)  
-**Dependencies:** Task 2.1, Task 4.1  
-**Priority:** P1 (Feature integration)
-
-**Description:**
-In `renderTodos()` function, add event listeners to Delete buttons:
-- When creating Delete button, add click event listener
-- On click, get todo id from data-id attribute or closure
-- Call deleteTodo(id)
-- Note: Requirements specify no confirmation dialog needed
-
-**Acceptance:**
-- Each Delete button has working click handler
-- Clicking Delete button removes correct todo from list
-- Todo disappears from display immediately
-- No errors in console
-- Other todos are unaffected
-
-**Traceability:** FR-003 → AC-3
-
----
-
-### Phase 5: Edit Todo Feature (FR-002)
-
-#### Task 5.1: Implement editTodo() Function
-**File:** `todo-app/app.js`  
-**Requirements:** FR-002 (Edit Todo Item)  
-**Dependencies:** Task 1.3, Task 2.1  
-**Priority:** P1 (Feature implementation)
-
-**Description:**
-Implement the `editTodo(id, newText)` function:
-- Accept id and newText parameters
-- Validate newText is not empty/whitespace only
-- Use Array.find() to locate todo with matching id
-- Update the todo's text property with newText
-- Call renderTodos() to update display
-
-**Acceptance:**
-- Function accepts id and newText parameters
-- Empty or whitespace-only newText is rejected (no update)
-- Todo with matching id has text updated
-- Other properties (id) remain unchanged
-- renderTodos() is called automatically
-- Function works correctly when called programmatically
-
-**Traceability:** FR-002 → AC-2
-
----
-
-#### Task 5.2: Wire Edit Button Event Listeners with Inline Editing
-**File:** `todo-app/app.js`  
-**Requirements:** FR-002 (Edit Todo Item)  
-**Dependencies:** Task 2.1, Task 5.1  
-**Priority:** P1 (Feature integration)
-
-**Description:**
-In `renderTodos()` function, implement inline edit functionality:
-- When creating Edit button, add click event listener
-- On click, get todo id and current text
-- Replace todo text display with an input field containing current text
-- Add Save/Update button or use Enter key to confirm
-- Add Cancel button or use Escape key to cancel (optional)
-- On confirm, call editTodo(id, newText)
-- On cancel, call renderTodos() to restore original display
-
-**Acceptance:**
-- Clicking Edit button converts todo text to editable input field
-- Input field is pre-filled with current todo text
-- User can modify the text
-- Confirming edit (Enter or button) updates the todo and restores display
-- Canceling edit (Escape or button) restores original todo without changes
-- Only one todo is in edit mode at a time
-- Edited text appears in list after save
-
-**Traceability:** FR-002 → AC-2
-
----
-
-## 3. Implementation Sequence Summary
-
-### Dependency Order
-
-```
-Phase 1: Foundation (parallel after 1.1)
-  1.1: HTML Structure (FOUNDATION - no dependencies)
-    ├─→ 1.2: CSS Stylesheet
-    └─→ 1.3: JavaScript Init & Data Structure
-
-Phase 2: Rendering (depends on Phase 1)
-  2.1: renderTodos() Function (depends on 1.1, 1.3)
-
-Phase 3: Add Feature (depends on Phase 2)
-  3.1: addTodo() Function (depends on 1.3, 2.1)
-  3.2: Add Button Listener (depends on 1.1, 1.3, 3.1)
-
-Phase 4: Delete Feature (depends on Phase 2)
-  4.1: deleteTodo() Function (depends on 1.3, 2.1)
-  4.2: Delete Button Listeners (depends on 2.1, 4.1)
-
-Phase 5: Edit Feature (depends on Phase 2)
-  5.1: editTodo() Function (depends on 1.3, 2.1)
-  5.2: Edit Button Listeners (depends on 2.1, 5.1)
+**Implementation Details**:
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Content will be added in subsequent tasks -->
+    <script src="app.js"></script>
+</body>
+</html>
 ```
 
-### Critical Path
-
-1. Task 1.1 (HTML) → MUST BE FIRST
-2. Task 1.3 (JS Init) → Depends on 1.1
-3. Task 2.1 (renderTodos) → Depends on 1.3
-4. Tasks 3.x, 4.x, 5.x can proceed in parallel after 2.1 is complete
-
-### Recommended Implementation Order
-
-1. **Day 1 - Foundation:**
-   - Task 1.1: HTML Structure
-   - Task 1.2: CSS Stylesheet
-   - Task 1.3: JavaScript Init
-
-2. **Day 1 - Core System:**
-   - Task 2.1: renderTodos()
-
-3. **Day 2 - Features:**
-   - Task 3.1: addTodo()
-   - Task 3.2: Wire Add Button
-   - Test FR-001 completely
-
-4. **Day 2 - Features:**
-   - Task 4.1: deleteTodo()
-   - Task 4.2: Wire Delete Buttons
-   - Test FR-003 completely
-
-5. **Day 3 - Features:**
-   - Task 5.1: editTodo()
-   - Task 5.2: Wire Edit Buttons
-   - Test FR-002 completely
-
-6. **Day 3 - Integration Testing:**
-   - Test all three features together
-   - Edge case testing
-   - Browser compatibility verification
+**Files Modified**:
+- `todo-app/index.html`
 
 ---
 
-## 4. Feature Implementation Sequence
+#### Task 1.3: Create CSS File Structure
 
-### Feature 1: Add Todo (FR-001)
-**Implementation Tasks:** 3.1, 3.2  
-**Prerequisites:** Tasks 1.1, 1.2, 1.3, 2.1 must be complete  
-**Order:** Implement first (most fundamental feature)
+**Description**: Create styles.css with basic reset and container styles.
 
-**Implementation Steps:**
-1. Implement addTodo() function with validation
-2. Test addTodo() programmatically via console
-3. Wire Add button event listener
-4. Test via UI: enter text and click Add
-5. Verify todo appears in list
+**Requirements Mapping**: Presentation foundation for FR-1, FR-2, FR-3
 
-**Testing Approach:**
-- Test 1: Add a single todo → verify it appears
-- Test 2: Add multiple todos → verify all appear
-- Test 3: Try to add empty todo → verify rejected
-- Test 4: Try to add whitespace-only todo → verify rejected
-- Test 5: Add todo with special characters → verify displays correctly
+**Acceptance Criteria**:
+- File `todo-app/styles.css` exists
+- Basic CSS reset or normalization present
+- Root-level container styles defined
+- File is valid CSS3
 
----
+**Blocking Tasks**: Task 1.1
 
-### Feature 2: Delete Todo (FR-003)
-**Implementation Tasks:** 4.1, 4.2  
-**Prerequisites:** Tasks 1.1, 1.2, 1.3, 2.1, 3.1, 3.2 must be complete  
-**Order:** Implement second (simpler than Edit)
+**Implementation Details**:
+- Box-sizing reset
+- Body margin/padding reset
+- Basic font family and size
 
-**Rationale:** Implement Delete before Edit because:
-- Delete is simpler (no inline editing UI)
-- Delete allows easy cleanup during Edit feature testing
-- Delete and Add together provide full CRUD cycle minus Update
-
-**Implementation Steps:**
-1. Implement deleteTodo() function
-2. Test deleteTodo() programmatically via console
-3. Wire Delete button listeners in renderTodos()
-4. Test via UI: add todos and delete them
-5. Verify correct todo is removed
-
-**Testing Approach:**
-- Test 1: Delete only todo in list → verify list is empty
-- Test 2: Delete first todo in multi-item list → verify correct one removed
-- Test 3: Delete last todo in multi-item list → verify correct one removed
-- Test 4: Delete middle todo in multi-item list → verify correct one removed
-- Test 5: Delete all todos one by one → verify list ends empty
+**Files Created**:
+- `todo-app/styles.css`
 
 ---
 
-### Feature 3: Edit Todo (FR-002)
-**Implementation Tasks:** 5.1, 5.2  
-**Prerequisites:** All previous tasks complete  
-**Order:** Implement last (most complex UI interaction)
+#### Task 1.4: Create JavaScript File Structure
 
-**Rationale:** Edit is most complex because:
-- Requires inline editing UI (input field replacement)
-- Requires handling confirm/cancel actions
-- Requires managing edit state
-- Benefits from having Add and Delete working for testing
+**Description**: Create app.js with basic structure and initialization.
 
-**Implementation Steps:**
-1. Implement editTodo() function with validation
-2. Test editTodo() programmatically via console
-3. Implement Edit button click handler with inline input
-4. Implement confirm edit (Enter key or Save button)
-5. Implement cancel edit (optional, Escape key)
-6. Test via UI: add todos, edit them, verify updates
+**Requirements Mapping**: Logic foundation for FR-1, FR-2, FR-3
 
-**Testing Approach:**
-- Test 1: Edit a todo with new text → verify text updates
-- Test 2: Edit a todo to empty → verify rejected (todo unchanged)
-- Test 3: Edit and cancel → verify todo remains unchanged
-- Test 4: Edit multiple todos in sequence → verify all update correctly
-- Test 5: Edit a todo with special characters → verify displays correctly
+**Acceptance Criteria**:
+- File `todo-app/app.js` exists
+- IIFE or module structure to avoid global namespace pollution
+- DOMContentLoaded event listener for initialization
+- File is valid ES6+ JavaScript
 
----
+**Blocking Tasks**: Task 1.1
 
-## 5. Testing Approach
-
-### Unit Testing Strategy
-
-**Manual Console Testing:**
-Each function should be tested independently via browser console before UI integration:
-
+**Implementation Details**:
 ```javascript
-// Test addTodo()
-addTodo("Test todo 1");
-console.log(todos); // Should show array with one todo
-
-// Test deleteTodo()
-deleteTodo(todos[0].id);
-console.log(todos); // Should show empty array
-
-// Test editTodo()
-addTodo("Original text");
-editTodo(todos[0].id, "Updated text");
-console.log(todos); // Should show updated text
+// Initialize application when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialization code will be added in subsequent tasks
+});
 ```
 
-### Integration Testing Strategy
-
-**Manual UI Testing:**
-Test each feature through the user interface:
-
-1. **Add Todo Integration Test:**
-   - Open application in browser
-   - Enter text in input field
-   - Click Add button
-   - Verify todo appears in list
-   - Verify input field is cleared
-
-2. **Delete Todo Integration Test:**
-   - Add several todos
-   - Click Delete on one todo
-   - Verify correct todo is removed
-   - Verify other todos remain
-
-3. **Edit Todo Integration Test:**
-   - Add a todo
-   - Click Edit button
-   - Modify text
-   - Confirm edit
-   - Verify updated text is displayed
-
-### End-to-End Testing Scenarios
-
-**Scenario 1: Basic Workflow**
-1. Add todo "Buy groceries"
-2. Add todo "Walk the dog"
-3. Add todo "Read a book"
-4. Delete "Walk the dog"
-5. Edit "Buy groceries" to "Buy groceries and cook dinner"
-6. Verify final list has 2 todos with correct text
-
-**Scenario 2: Edge Cases**
-1. Try to add empty todo (should fail)
-2. Try to add whitespace-only todo (should fail)
-3. Add todo with very long text (should work)
-4. Add todo with special characters: <>&"' (should work and display safely)
-5. Edit todo to empty (should fail, todo unchanged)
-6. Delete all todos (list should be empty)
-
-**Scenario 3: Rapid Actions**
-1. Add 10 todos quickly
-2. Delete every other todo
-3. Edit remaining todos
-4. Verify all operations work correctly
-
-### Browser Compatibility Testing
-
-**Target Browsers (per NFR-003):**
-- Chrome (latest 2 versions)
-- Firefox (latest 2 versions)
-- Safari (latest 2 versions)
-- Edge (latest 2 versions)
-
-**Test Checklist per Browser:**
-- [ ] Application loads without errors
-- [ ] Input field is functional
-- [ ] Add button works
-- [ ] Todos display correctly
-- [ ] Edit button works and inline editing functions
-- [ ] Delete button works
-- [ ] No console errors
-- [ ] Styling appears correct
-
-### Performance Testing (NFR-002)
-
-**Test:** Add 100 todos and verify operations remain responsive
-
-**Steps:**
-1. Use console loop to add 100 todos: `for(let i=0; i<100; i++) addTodo("Todo " + i);`
-2. Test Add: add another todo → should be instant
-3. Test Delete: delete a todo from middle of list → should be instant
-4. Test Edit: edit a todo from middle of list → should be instant
-5. Test Render: call renderTodos() → should complete in <100ms
-
-**Acceptance:** All operations complete without perceptible delay
+**Files Created**:
+- `todo-app/app.js`
 
 ---
 
-## 6. Task-to-Requirement Traceability
+### Phase 2: Data Layer Implementation
 
-| Task ID | Task Name | Functional Requirement | Acceptance Criterion |
-|---------|-----------|----------------------|---------------------|
-| 1.1 | Create HTML Structure | FR-001, FR-002, FR-003 | Foundation for all AC |
-| 1.2 | Create CSS Stylesheet | NFR-001 | Usability |
-| 1.3 | Initialize JavaScript | FR-001, FR-002, FR-003 | Foundation for all AC |
-| 2.1 | Implement renderTodos() | FR-001, FR-002, FR-003 | Display for AC-1, AC-2, AC-3 |
-| 3.1 | Implement addTodo() | FR-001 | AC-1 |
-| 3.2 | Wire Add Button | FR-001 | AC-1 |
-| 4.1 | Implement deleteTodo() | FR-003 | AC-3 |
-| 4.2 | Wire Delete Buttons | FR-003 | AC-3 |
-| 5.1 | Implement editTodo() | FR-002 | AC-2 |
-| 5.2 | Wire Edit Buttons | FR-002 | AC-2 |
+**Dependencies**: Phase 1 (Task 1.4)  
+**Purpose**: Implement in-memory data storage and CRUD operations
 
 ---
 
-## 7. Implementation Constraints
+#### Task 2.1: Implement Todo Data Structure
 
-### Scope Constraints
-- Implement ONLY the three approved features: Add, Edit, Delete
-- Do NOT implement persistence (localStorage, database, etc.)
-- Do NOT implement authentication or user management
-- Do NOT implement todo completion status or checkboxes
-- Do NOT implement search, filter, sort, or other list operations
-- Do NOT implement categories, priorities, or due dates
+**Description**: Define the in-memory data structure to store todos.
 
-### Technical Constraints
-- Use vanilla JavaScript only (no frameworks or libraries)
-- Use only HTML5, CSS3, JavaScript ES6+
-- No external dependencies or npm packages
-- No build tools or bundlers required
-- Files must run directly in browser without compilation
+**Requirements Mapping**: Data storage for FR-1, FR-2, FR-3
 
-### Quality Constraints
-- All code must be readable and maintainable
-- Functions must have single, clear responsibility
-- Variable names must be descriptive
-- Comments should explain "why" not "what"
-- No dead code or unused variables
+**Acceptance Criteria**:
+- Array variable `todos` declared to store todo items
+- Counter variable `nextId` declared for unique ID generation
+- Data structure supports: `{ id: number, text: string }`
+- Variables are properly scoped
 
----
+**Blocking Tasks**: Task 1.4
 
-## 8. Definition of Done
+**Implementation Details**:
+```javascript
+let todos = [];
+let nextId = 1;
+```
 
-### Task-Level Done Criteria
-A task is considered complete when:
-- [ ] Code is written and syntactically correct
-- [ ] Function works as described when tested in console
-- [ ] No console errors or warnings
-- [ ] Code follows naming and style conventions
-- [ ] Comments are added where necessary
-
-### Feature-Level Done Criteria
-A feature is considered complete when:
-- [ ] All implementation tasks for feature are complete
-- [ ] Feature works correctly through UI (not just console)
-- [ ] All test cases for feature pass
-- [ ] Functional requirement is fully satisfied
-- [ ] Acceptance criterion is met
-
-### Implementation Phase Done Criteria
-The implementation phase is complete when:
-- [ ] All 10 tasks (1.1 through 5.2) are complete
-- [ ] All three features (Add, Edit, Delete) work correctly
-- [ ] All functional requirements (FR-001, FR-002, FR-003) are satisfied
-- [ ] All acceptance criteria (AC-1, AC-2, AC-3) are met
-- [ ] Integration testing passes
-- [ ] Browser compatibility verified
-- [ ] No console errors in any target browser
-- [ ] Code is ready for Code Review phase
+**Files Modified**:
+- `todo-app/app.js`
 
 ---
 
-## 9. Risk Mitigation
+#### Task 2.2: Implement Add Todo Data Operation
 
-### Risk 1: Edit Feature UI Complexity
-**Risk:** Inline editing UI may be complex to implement  
-**Mitigation:** Implement Edit last, after Add and Delete are working. Use simple input replacement pattern. Consider using prompt() as fallback if inline editing is too complex.
+**Description**: Create function to add a todo to the data array.
 
-### Risk 2: Event Listener Management
-**Risk:** Event listeners on dynamically created Delete/Edit buttons need proper wiring  
-**Mitigation:** Attach event listeners in renderTodos() when creating buttons. Test thoroughly with multiple todos.
+**Requirements Mapping**: FR-1 (Data layer for Add Todo)
 
-### Risk 3: ID Uniqueness
-**Risk:** Using Date.now() for IDs could theoretically cause collisions if user adds todos very rapidly  
-**Mitigation:** Date.now() provides millisecond precision, sufficient for human interaction speeds. This risk is acceptable for the application scope.
+**Acceptance Criteria**:
+- Function accepts todo text as parameter
+- Function generates unique ID using nextId counter
+- Function creates todo object: `{ id, text }`
+- Function adds todo to todos array
+- Function increments nextId
+- Function returns the created todo object
 
-### Risk 4: XSS from User Input
-**Risk:** User-entered text could contain HTML/script tags  
-**Mitigation:** Use `textContent` (not `innerHTML`) when displaying user text. This prevents script execution.
+**Blocking Tasks**: Task 2.1
 
----
+**Implementation Details**:
+```javascript
+function addTodoToData(text) {
+    const todo = {
+        id: nextId++,
+        text: text
+    };
+    todos.push(todo);
+    return todo;
+}
+```
 
-## 10. Notes for Implementation Agent
-
-1. **Start with Foundation:** Complete Phase 1 (Tasks 1.1, 1.2, 1.3) before moving to other phases.
-
-2. **Test Early and Often:** Test each function via console before wiring to UI.
-
-3. **Use textContent:** When displaying user-entered todo text, use `element.textContent = todo.text`, not `innerHTML`, to prevent XSS.
-
-4. **Keep It Simple:** If inline editing (Task 5.2) becomes too complex, using `prompt()` is an acceptable alternative that still satisfies FR-002.
-
-5. **Console Debugging:** Add temporary console.log statements during development to verify data flow. Remove before final code review.
-
-6. **Git Commits:** Create a commit after each completed feature (after 3.2, after 4.2, after 5.2).
-
-7. **Don't Add Features:** Resist the temptation to add completion checkboxes, persistence, or other features not in requirements.
-
-8. **IDs for Event Listeners:** Use element IDs for main controls (todoInput, addBtn, todoList). Use data-id attributes on dynamically created buttons.
+**Files Modified**:
+- `todo-app/app.js`
 
 ---
 
-## 11. Implementation Readiness Checklist
+#### Task 2.3: Implement Update Todo Data Operation
 
-Before starting implementation, verify:
-- [x] requirements.md exists and is approved
-- [x] architecture.md exists and is approved
-- [x] design-review.md shows APPROVED status
-- [x] impl-plan.md (this document) is complete
-- [x] File structure is defined (todo-app/ with 3 files)
-- [x] All tasks are defined with clear acceptance criteria
-- [x] Task dependencies are identified
-- [x] Implementation order is clear
-- [x] Testing approach is defined
-- [x] Scope constraints are understood
+**Description**: Create function to update an existing todo's text in the data array.
 
-**Status:** READY FOR IMPLEMENTATION
+**Requirements Mapping**: FR-2 (Data layer for Edit Todo)
+
+**Acceptance Criteria**:
+- Function accepts todo ID and new text as parameters
+- Function finds todo in array by ID
+- Function updates the text property of the found todo
+- Function returns true if todo found and updated, false otherwise
+
+**Blocking Tasks**: Task 2.1
+
+**Implementation Details**:
+```javascript
+function updateTodoInData(id, newText) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.text = newText;
+        return true;
+    }
+    return false;
+}
+```
+
+**Files Modified**:
+- `todo-app/app.js`
 
 ---
 
-**Implementation Plan Complete**  
-**Status:** APPROVED  
-**Next Phase:** Implementation (execute tasks in dependency order)
+#### Task 2.4: Implement Delete Todo Data Operation
+
+**Description**: Create function to remove a todo from the data array.
+
+**Requirements Mapping**: FR-3 (Data layer for Delete Todo)
+
+**Acceptance Criteria**:
+- Function accepts todo ID as parameter
+- Function finds index of todo in array by ID
+- Function removes todo from array using splice
+- Function returns true if todo found and removed, false otherwise
+
+**Blocking Tasks**: Task 2.1
+
+**Implementation Details**:
+```javascript
+function deleteTodoFromData(id) {
+    const index = todos.findIndex(t => t.id === id);
+    if (index !== -1) {
+        todos.splice(index, 1);
+        return true;
+    }
+    return false;
+}
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+### Phase 3: UI Component Implementation
+
+**Dependencies**: Phase 1 (Task 1.2)  
+**Purpose**: Build the HTML structure for user interaction
+
+---
+
+#### Task 3.1: Implement Input Form HTML
+
+**Description**: Add HTML elements for todo input and Add button.
+
+**Requirements Mapping**: FR-1 (UI for Add Todo)
+
+**Acceptance Criteria**:
+- Container div with appropriate ID or class
+- Text input field with ID `todoInput`
+- Input field has placeholder text
+- Add button with ID `addButton`
+- Add button displays "Add" text
+- Elements are semantically correct HTML5
+
+**Blocking Tasks**: Task 1.2
+
+**Implementation Details**:
+```html
+<div class="todo-form">
+    <input type="text" id="todoInput" placeholder="Enter a new todo...">
+    <button id="addButton">Add</button>
+</div>
+```
+
+**Files Modified**:
+- `todo-app/index.html`
+
+---
+
+#### Task 3.2: Implement Todo List Container HTML
+
+**Description**: Add HTML container to display the list of todos.
+
+**Requirements Mapping**: FR-1, FR-2, FR-3 (Display for all operations)
+
+**Acceptance Criteria**:
+- Container element (div or ul) with ID `todoList`
+- Container is empty initially (populated by JavaScript)
+- Container is semantically appropriate for a list
+
+**Blocking Tasks**: Task 1.2
+
+**Implementation Details**:
+```html
+<div id="todoList" class="todo-list">
+    <!-- Todos will be rendered here by JavaScript -->
+</div>
+```
+
+**Files Modified**:
+- `todo-app/index.html`
+
+---
+
+#### Task 3.3: Implement Main Application Container HTML
+
+**Description**: Wrap form and list in a main application container.
+
+**Requirements Mapping**: Overall application structure
+
+**Acceptance Criteria**:
+- Main container div with class or ID
+- Contains todo form (Task 3.1)
+- Contains todo list (Task 3.2)
+- Optionally includes application title/header
+
+**Blocking Tasks**: Task 3.1, Task 3.2
+
+**Implementation Details**:
+```html
+<div class="app-container">
+    <h1>My Todos</h1>
+    <!-- Form from Task 3.1 -->
+    <!-- List from Task 3.2 -->
+</div>
+```
+
+**Files Modified**:
+- `todo-app/index.html`
+
+---
+
+### Phase 4: Rendering Logic Implementation
+
+**Dependencies**: Phase 2 (Data Layer), Phase 3 (UI Container)  
+**Purpose**: Implement the render function to display todos
+
+---
+
+#### Task 4.1: Implement Render Todos Function
+
+**Description**: Create renderTodos() function to display all todos in the DOM.
+
+**Requirements Mapping**: FR-1, FR-2, FR-3 (Display updated list after each operation)
+
+**Acceptance Criteria**:
+- Function named `renderTodos()` exists
+- Function clears existing content in todoList container
+- Function iterates over todos array
+- For each todo, function creates appropriate DOM elements
+- Each todo displays its text
+- Each todo includes an Edit button with data-id attribute
+- Each todo includes a Delete button with data-id attribute
+- Function handles empty todos array (displays empty list)
+- DOM structure is semantic and accessible
+
+**Blocking Tasks**: Task 2.1, Task 3.2
+
+**Implementation Details**:
+```javascript
+function renderTodos() {
+    const todoList = document.getElementById('todoList');
+    todoList.innerHTML = '';
+    
+    todos.forEach(todo => {
+        const todoItem = document.createElement('div');
+        todoItem.className = 'todo-item';
+        
+        const todoText = document.createElement('span');
+        todoText.className = 'todo-text';
+        todoText.textContent = todo.text;
+        
+        const editButton = document.createElement('button');
+        editButton.className = 'edit-button';
+        editButton.textContent = 'Edit';
+        editButton.dataset.id = todo.id;
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.textContent = 'Delete';
+        deleteButton.dataset.id = todo.id;
+        
+        todoItem.appendChild(todoText);
+        todoItem.appendChild(editButton);
+        todoItem.appendChild(deleteButton);
+        
+        todoList.appendChild(todoItem);
+    });
+}
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+### Phase 5: Application Logic Implementation
+
+**Dependencies**: Phase 2 (Data Layer), Phase 4 (Render Function)  
+**Purpose**: Implement business logic for Add, Edit, Delete operations
+
+---
+
+#### Task 5.1: Implement Add Todo Logic Function
+
+**Description**: Create addTodo() function to handle adding a new todo.
+
+**Requirements Mapping**: FR-1 (Application logic for Add Todo)
+
+**Acceptance Criteria**:
+- Function named `addTodo()` exists
+- Function retrieves text from todoInput element
+- Function validates input is not empty (trim whitespace)
+- If valid, function calls addTodoToData() with the text
+- Function calls renderTodos() to update display
+- Function clears the input field after adding
+- Function focuses back on input field for next entry
+- If invalid (empty), function does nothing or shows feedback
+
+**Blocking Tasks**: Task 2.2, Task 4.1
+
+**Implementation Details**:
+```javascript
+function addTodo() {
+    const input = document.getElementById('todoInput');
+    const text = input.value.trim();
+    
+    if (text === '') {
+        return; // Don't add empty todos
+    }
+    
+    addTodoToData(text);
+    renderTodos();
+    input.value = '';
+    input.focus();
+}
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+#### Task 5.2: Implement Edit Todo Logic Function
+
+**Description**: Create editTodo() function to handle editing an existing todo.
+
+**Requirements Mapping**: FR-2 (Application logic for Edit Todo)
+
+**Acceptance Criteria**:
+- Function named `editTodo()` accepts todo ID as parameter
+- Function finds the todo in the data by ID
+- Function creates inline editing interface (replace text with input field)
+- Input field is pre-filled with current todo text
+- Input field is focused and text is selected
+- Function handles save on blur or Enter key press
+- Function validates new text is not empty
+- Function calls updateTodoInData() with ID and new text
+- Function calls renderTodos() to update display
+- Function handles cancel on Escape key (optional enhancement)
+
+**Blocking Tasks**: Task 2.3, Task 4.1
+
+**Implementation Details**:
+```javascript
+function editTodo(id) {
+    const todo = todos.find(t => t.id === id);
+    if (!todo) return;
+    
+    const newText = prompt('Edit todo:', todo.text);
+    
+    if (newText !== null && newText.trim() !== '') {
+        updateTodoInData(id, newText.trim());
+        renderTodos();
+    }
+}
+```
+
+**Note**: This uses prompt() for simplicity. Can be enhanced with inline editing in future iterations if needed.
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+#### Task 5.3: Implement Delete Todo Logic Function
+
+**Description**: Create deleteTodo() function to handle deleting a todo.
+
+**Requirements Mapping**: FR-3 (Application logic for Delete Todo)
+
+**Acceptance Criteria**:
+- Function named `deleteTodo()` accepts todo ID as parameter
+- Function calls deleteTodoFromData() with the ID
+- Function calls renderTodos() to update display
+- Function successfully removes todo from view
+
+**Blocking Tasks**: Task 2.4, Task 4.1
+
+**Implementation Details**:
+```javascript
+function deleteTodo(id) {
+    deleteTodoFromData(id);
+    renderTodos();
+}
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+### Phase 6: Event Handling Implementation
+
+**Dependencies**: Phase 5 (Application Logic)  
+**Purpose**: Wire user interactions to application logic
+
+---
+
+#### Task 6.1: Implement Add Button Event Listener
+
+**Description**: Attach click event listener to Add button.
+
+**Requirements Mapping**: FR-1 (User trigger for Add Todo)
+
+**Acceptance Criteria**:
+- Click event listener attached to addButton element
+- Click event calls addTodo() function
+- Event listener is attached after DOM is loaded
+
+**Blocking Tasks**: Task 5.1, Task 3.1
+
+**Implementation Details**:
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    const addButton = document.getElementById('addButton');
+    addButton.addEventListener('click', addTodo);
+});
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+#### Task 6.2: Implement Input Field Enter Key Event Listener
+
+**Description**: Allow adding todos by pressing Enter in the input field.
+
+**Requirements Mapping**: FR-1 (Alternative user trigger for Add Todo)
+
+**Acceptance Criteria**:
+- Keypress event listener attached to todoInput element
+- Enter key (key code 13 or key 'Enter') triggers addTodo() function
+- Event listener is attached after DOM is loaded
+
+**Blocking Tasks**: Task 5.1, Task 3.1
+
+**Implementation Details**:
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    const todoInput = document.getElementById('todoInput');
+    todoInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addTodo();
+        }
+    });
+});
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+#### Task 6.3: Implement Edit and Delete Button Event Delegation
+
+**Description**: Attach delegated event listeners for dynamically created Edit and Delete buttons.
+
+**Requirements Mapping**: FR-2, FR-3 (User triggers for Edit and Delete Todo)
+
+**Acceptance Criteria**:
+- Click event listener attached to todoList container using event delegation
+- Click on Edit button (identified by class) calls editTodo() with correct ID
+- Click on Delete button (identified by class) calls deleteTodo() with correct ID
+- Event delegation handles dynamically created buttons
+- Event listener is attached after DOM is loaded
+
+**Blocking Tasks**: Task 5.2, Task 5.3, Task 3.2
+
+**Implementation Details**:
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    const todoList = document.getElementById('todoList');
+    
+    todoList.addEventListener('click', function(e) {
+        if (e.target.classList.contains('edit-button')) {
+            const id = parseInt(e.target.dataset.id);
+            editTodo(id);
+        } else if (e.target.classList.contains('delete-button')) {
+            const id = parseInt(e.target.dataset.id);
+            deleteTodo(id);
+        }
+    });
+});
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+#### Task 6.4: Implement Initial Render on Page Load
+
+**Description**: Call renderTodos() on page load to initialize the display.
+
+**Requirements Mapping**: Application initialization for FR-1, FR-2, FR-3
+
+**Acceptance Criteria**:
+- renderTodos() is called after DOM is loaded
+- Empty todo list is displayed initially
+- Application is ready for user interaction
+
+**Blocking Tasks**: Task 4.1
+
+**Implementation Details**:
+```javascript
+document.addEventListener('DOMContentLoaded', function() {
+    // ... other event listeners ...
+    renderTodos(); // Initial render
+});
+```
+
+**Files Modified**:
+- `todo-app/app.js`
+
+---
+
+### Phase 7: CSS Styling Implementation
+
+**Dependencies**: Phase 3 (UI Components)  
+**Purpose**: Style the application for usability and visual clarity
+
+---
+
+#### Task 7.1: Implement App Container Styles
+
+**Description**: Style the main application container for layout and centering.
+
+**Requirements Mapping**: Overall presentation for FR-1, FR-2, FR-3
+
+**Acceptance Criteria**:
+- `.app-container` styles defined
+- Container is centered on page
+- Container has appropriate max-width
+- Container has padding and margin
+- Background color or visual container defined
+
+**Blocking Tasks**: Task 3.3
+
+**Implementation Details**:
+```css
+.app-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+```
+
+**Files Modified**:
+- `todo-app/styles.css`
+
+---
+
+#### Task 7.2: Implement Input Form Styles
+
+**Description**: Style the todo input form and Add button.
+
+**Requirements Mapping**: FR-1 (Presentation for Add Todo)
+
+**Acceptance Criteria**:
+- `.todo-form` styles defined
+- Input field and button are visually aligned
+- Input field has appropriate width, padding, border
+- Add button has clear visual affordance (color, hover state)
+- Layout is responsive (flexbox or grid)
+
+**Blocking Tasks**: Task 3.1
+
+**Implementation Details**:
+```css
+.todo-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#todoInput {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+#addButton {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#addButton:hover {
+    background-color: #45a049;
+}
+```
+
+**Files Modified**:
+- `todo-app/styles.css`
+
+---
+
+#### Task 7.3: Implement Todo List Styles
+
+**Description**: Style the todo list container and individual todo items.
+
+**Requirements Mapping**: FR-1, FR-2, FR-3 (Presentation for all operations)
+
+**Acceptance Criteria**:
+- `.todo-list` styles defined
+- `.todo-item` styles defined for individual todos
+- Todo items have clear visual separation
+- Todo text is readable and properly sized
+- Layout is clean and organized
+
+**Blocking Tasks**: Task 3.2, Task 4.1
+
+**Implementation Details**:
+```css
+.todo-list {
+    list-style: none;
+    padding: 0;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.todo-text {
+    flex: 1;
+    font-size: 16px;
+    color: #333;
+}
+```
+
+**Files Modified**:
+- `todo-app/styles.css`
+
+---
+
+#### Task 7.4: Implement Edit and Delete Button Styles
+
+**Description**: Style the Edit and Delete buttons for each todo item.
+
+**Requirements Mapping**: FR-2, FR-3 (Presentation for Edit and Delete)
+
+**Acceptance Criteria**:
+- `.edit-button` styles defined
+- `.delete-button` styles defined
+- Buttons have clear visual distinction (different colors)
+- Buttons have hover states for user feedback
+- Buttons are appropriately sized and clickable
+
+**Blocking Tasks**: Task 4.1
+
+**Implementation Details**:
+```css
+.edit-button,
+.delete-button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.edit-button {
+    background-color: #2196F3;
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #0b7dda;
+}
+
+.delete-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #da190b;
+}
+```
+
+**Files Modified**:
+- `todo-app/styles.css`
+
+---
+
+#### Task 7.5: Implement Responsive Design Styles
+
+**Description**: Add responsive styles for mobile devices.
+
+**Requirements Mapping**: Overall usability for FR-1, FR-2, FR-3
+
+**Acceptance Criteria**:
+- Media query for small screens defined
+- Layout adjusts appropriately on mobile
+- Buttons and text remain readable and clickable
+- No horizontal scrolling required
+
+**Blocking Tasks**: Task 7.1, Task 7.2, Task 7.3, Task 7.4
+
+**Implementation Details**:
+```css
+@media (max-width: 600px) {
+    .app-container {
+        margin: 20px;
+        padding: 15px;
+    }
+    
+    .todo-form {
+        flex-direction: column;
+    }
+    
+    #addButton {
+        width: 100%;
+    }
+}
+```
+
+**Files Modified**:
+- `todo-app/styles.css`
+
+---
+
+## Task Dependency Graph
+
+```
+Phase 1: Foundation Setup
+├── Task 1.1: Create Directory Structure
+├── Task 1.2: Create HTML File Structure (depends on 1.1)
+├── Task 1.3: Create CSS File Structure (depends on 1.1)
+└── Task 1.4: Create JavaScript File Structure (depends on 1.1)
+
+Phase 2: Data Layer Implementation
+├── Task 2.1: Implement Todo Data Structure (depends on 1.4)
+├── Task 2.2: Implement Add Todo Data Operation (depends on 2.1)
+├── Task 2.3: Implement Update Todo Data Operation (depends on 2.1)
+└── Task 2.4: Implement Delete Todo Data Operation (depends on 2.1)
+
+Phase 3: UI Component Implementation
+├── Task 3.1: Implement Input Form HTML (depends on 1.2)
+├── Task 3.2: Implement Todo List Container HTML (depends on 1.2)
+└── Task 3.3: Implement Main Application Container HTML (depends on 3.1, 3.2)
+
+Phase 4: Rendering Logic Implementation
+└── Task 4.1: Implement Render Todos Function (depends on 2.1, 3.2)
+
+Phase 5: Application Logic Implementation
+├── Task 5.1: Implement Add Todo Logic Function (depends on 2.2, 4.1)
+├── Task 5.2: Implement Edit Todo Logic Function (depends on 2.3, 4.1)
+└── Task 5.3: Implement Delete Todo Logic Function (depends on 2.4, 4.1)
+
+Phase 6: Event Handling Implementation
+├── Task 6.1: Implement Add Button Event Listener (depends on 5.1, 3.1)
+├── Task 6.2: Implement Input Field Enter Key Event Listener (depends on 5.1, 3.1)
+├── Task 6.3: Implement Edit and Delete Button Event Delegation (depends on 5.2, 5.3, 3.2)
+└── Task 6.4: Implement Initial Render on Page Load (depends on 4.1)
+
+Phase 7: CSS Styling Implementation
+├── Task 7.1: Implement App Container Styles (depends on 3.3)
+├── Task 7.2: Implement Input Form Styles (depends on 3.1)
+├── Task 7.3: Implement Todo List Styles (depends on 3.2, 4.1)
+├── Task 7.4: Implement Edit and Delete Button Styles (depends on 4.1)
+└── Task 7.5: Implement Responsive Design Styles (depends on 7.1, 7.2, 7.3, 7.4)
+```
+
+---
+
+## Requirements Traceability Matrix
+
+| Functional Requirement | Tasks | Components |
+|------------------------|-------|------------|
+| **FR-1: Add Todo Item** | 2.2, 3.1, 4.1, 5.1, 6.1, 6.2, 7.2 | Data Layer: addTodoToData()<br>UI: Input field + Add button<br>Logic: addTodo()<br>Render: renderTodos()<br>Events: Click + Enter handlers |
+| **FR-2: Edit Todo Item** | 2.3, 3.2, 4.1, 5.2, 6.3, 7.4 | Data Layer: updateTodoInData()<br>UI: Edit button per todo<br>Logic: editTodo()<br>Render: renderTodos()<br>Events: Delegated click handler |
+| **FR-3: Delete Todo Item** | 2.4, 3.2, 4.1, 5.3, 6.3, 7.4 | Data Layer: deleteTodoFromData()<br>UI: Delete button per todo<br>Logic: deleteTodo()<br>Render: renderTodos()<br>Events: Delegated click handler |
+
+---
+
+## Suggested Implementation Order
+
+The tasks should be implemented in the following order to maintain proper dependencies:
+
+### Iteration 1: Foundation (Tasks 1.1 - 1.4)
+Create all three files with basic structure. This provides the foundation for all subsequent work.
+
+### Iteration 2: Data Layer (Tasks 2.1 - 2.4)
+Implement the data structure and CRUD operations. This can be tested independently in browser console.
+
+### Iteration 3: Basic UI (Tasks 3.1 - 3.3)
+Build the HTML structure for the form and list. The page will be visible but non-functional.
+
+### Iteration 4: Rendering (Task 4.1)
+Implement the render function. Can be tested by manually adding items to todos array in console.
+
+### Iteration 5: Add Functionality (Tasks 5.1, 6.1, 6.2)
+Complete the Add Todo feature end-to-end. First fully functional feature.
+
+### Iteration 6: Edit and Delete Functionality (Tasks 5.2, 5.3, 6.3)
+Complete Edit and Delete features. All three functional requirements now working.
+
+### Iteration 7: Initial Render (Task 6.4)
+Add initialization code. Application is fully functional.
+
+### Iteration 8: Styling (Tasks 7.1 - 7.5)
+Apply CSS styling for visual presentation and usability. Complete the user experience.
+
+---
+
+## Implementation Guidelines
+
+### Code Quality Standards
+
+1. **JavaScript**:
+   - Use ES6+ syntax (const, let, arrow functions, template literals)
+   - Use strict equality (===)
+   - Validate inputs before processing
+   - Use meaningful variable and function names
+   - Add comments for complex logic
+
+2. **HTML**:
+   - Use semantic HTML5 elements
+   - Include appropriate ARIA labels for accessibility
+   - Ensure proper nesting and valid structure
+   - Use meaningful IDs and classes
+
+3. **CSS**:
+   - Use consistent naming conventions (BEM or similar)
+   - Group related styles together
+   - Use CSS variables for colors if needed
+   - Ensure mobile-first or responsive approach
+
+### Testing Checkpoints
+
+After each phase, verify:
+
+**After Phase 2 (Data Layer)**:
+- Open browser console
+- Manually call addTodoToData('Test')
+- Verify todos array contains the item
+- Test updateTodoInData() and deleteTodoFromData()
+
+**After Phase 5 (Application Logic)**:
+- Open browser console
+- Call addTodo() (should fail gracefully with no UI yet)
+- Verify functions are defined
+
+**After Phase 6 (Event Handling)**:
+- Test adding a todo via Add button
+- Test adding a todo via Enter key
+- Test editing a todo
+- Test deleting a todo
+- Verify all operations work end-to-end
+
+**After Phase 7 (Styling)**:
+- Verify visual appearance matches design intent
+- Test on multiple screen sizes
+- Verify hover states work
+- Check color contrast for accessibility
+
+---
+
+## Out of Scope
+
+The following items are explicitly NOT included in this implementation plan:
+
+- Data persistence (localStorage, database)
+- Todo completion status or checkboxes
+- Todo prioritization or categories
+- Due dates or reminders
+- Search or filter functionality
+- Sorting or reordering
+- Bulk operations
+- Undo/redo functionality
+- User authentication
+- Backend API integration
+- Framework integration (React, Vue, Angular)
+- Build tools or bundlers
+- Testing frameworks (unit tests, e2e tests)
+
+---
+
+## Risk Mitigation
+
+### Potential Issues and Solutions
+
+**Issue**: Empty input validation  
+**Solution**: Task 5.1 includes trim() and empty check before adding
+
+**Issue**: Inline editing complexity  
+**Solution**: Task 5.2 uses prompt() for simplicity; can be enhanced later if needed
+
+**Issue**: Button event listeners on dynamic elements  
+**Solution**: Task 6.3 uses event delegation on parent container
+
+**Issue**: ID conflicts or collisions  
+**Solution**: Task 2.1 uses incrementing counter which is sufficient for client-side single-session app
+
+**Issue**: Data loss on page refresh  
+**Solution**: Not a bug - this is by design per requirements (no persistence)
+
+---
+
+## Definition of Done
+
+The implementation is complete when:
+
+1. All 24 tasks are implemented
+2. All three functional requirements are working:
+   - FR-1: User can add a todo
+   - FR-2: User can edit a todo
+   - FR-3: User can delete a todo
+3. Application loads without errors
+4. UI is styled and usable
+5. Application works in modern browsers (Chrome, Firefox, Safari, Edge)
+6. No console errors during normal operation
+7. Code follows the approved architecture
+8. No out-of-scope features have been added
+
+---
+
+## Next Steps
+
+1. Proceed to Implementation phase
+2. Implement tasks in the suggested order
+3. Test each phase before proceeding to the next
+4. Create code-review.md after implementation is complete
+5. Prepare for Verification phase
+
+---
+
+## Approval
+
+This implementation plan is ready for execution.
+
+**Status**: APPROVED for Implementation  
+**Date**: 2026-10-05  
+**Next Phase**: Implementation

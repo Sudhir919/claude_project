@@ -1,245 +1,242 @@
-# Todo Application Architecture
+# Todo Application - Architecture Document
+
+## Document Information
+
+- **Phase**: Architecture
+- **Date**: 2026-10-05
+- **Source**: requirements.md
+- **Architecture Style**: Client-Side Single Page Application
 
 ## Architecture Overview
 
-The Todo application follows a simple client-side architecture using vanilla HTML, CSS, and JavaScript. All functionality runs in the browser with no external dependencies, backend services, or data persistence.
+The Todo application will be implemented as a simple client-side single page application using vanilla HTML, CSS, and JavaScript. This architecture satisfies all three functional requirements (FR-1, FR-2, FR-3) while maintaining minimal complexity.
 
-### Architecture Principles
+### Architecture Rationale
 
-- **Simplicity First**: Minimal architecture necessary to satisfy functional requirements
-- **Browser-Based**: All logic and data exists in the browser memory
-- **No External Dependencies**: Pure HTML/CSS/JavaScript with no frameworks or libraries
-- **No Persistence**: Data exists only during the browser session (in-memory)
+- **Client-side only**: No backend required since data persistence is explicitly out of scope
+- **No frameworks**: Vanilla JavaScript is sufficient for the three operations
+- **No database**: In-memory storage satisfies the requirements
+- **Browser-based**: Runs entirely in the user's browser
 
-## System Architecture
+## System Components
 
-```
-┌─────────────────────────────────────────────┐
-│           Browser Environment               │
-│                                             │
-│  ┌────────────────────────────────────┐   │
-│  │        User Interface Layer        │   │
-│  │         (HTML + CSS)               │   │
-│  │  - Input field for todo text       │   │
-│  │  - Add button                      │   │
-│  │  - Todo list display               │   │
-│  │  - Edit/Delete buttons per item    │   │
-│  └──────────────┬─────────────────────┘   │
-│                 │                           │
-│                 │ DOM Events                │
-│                 │                           │
-│  ┌──────────────▼─────────────────────┐   │
-│  │      Application Logic Layer       │   │
-│  │         (JavaScript)               │   │
-│  │  - Add todo handler                │   │
-│  │  - Edit todo handler               │   │
-│  │  - Delete todo handler             │   │
-│  │  - Render todo list                │   │
-│  └──────────────┬─────────────────────┘   │
-│                 │                           │
-│                 │ Read/Write                │
-│                 │                           │
-│  ┌──────────────▼─────────────────────┐   │
-│  │         Data Layer                 │   │
-│  │      (In-Memory Array)             │   │
-│  │  - Array of todo objects           │   │
-│  └────────────────────────────────────┘   │
-│                                             │
-└─────────────────────────────────────────────┘
-```
+### 1. User Interface Component (HTML)
 
-## Component Design
-
-### 1. User Interface Component (HTML + CSS)
-
-**Responsibility**: Present the todo application interface to the user
+**Responsibility**: Provide the structure and layout for user interaction
 
 **Elements**:
-- Input field: Text input for entering new todo items
-- Add button: Trigger to add a new todo item
-- Todo list container: Display area for all todo items
-- Todo item row: Individual todo with text, Edit button, and Delete button
+- Input field for entering todo text
+- Add button to trigger adding a new todo
+- Todo list container to display all todo items
+- Edit button for each todo item
+- Delete button for each todo item
 
-**Requirements Satisfied**: 
-- FR-001: Provides input field and Add button
-- FR-002: Provides Edit button for each todo item
-- FR-003: Provides Delete button for each todo item
+**Requirements Satisfied**: Supports user input and actions for FR-1, FR-2, FR-3
 
-### 2. Application Logic Component (JavaScript)
+### 2. Presentation Component (CSS)
 
-**Responsibility**: Handle user interactions and manage todo operations
+**Responsibility**: Style the user interface for usability and visual clarity
+
+**Elements**:
+- Layout styles for the todo form and list
+- Button styles for Add, Edit, Delete actions
+- Todo item styles
+- Responsive design for different screen sizes
+
+**Requirements Satisfied**: Enables clear visual presentation of FR-1, FR-2, FR-3 operations
+
+### 3. Application Logic Component (JavaScript)
+
+**Responsibility**: Handle user interactions and coordinate between UI and data
 
 **Functions**:
+- `addTodo()`: Handle add button click, validate input, call data layer, update UI
+- `editTodo(id)`: Handle edit button click, allow text modification, call data layer, update UI
+- `deleteTodo(id)`: Handle delete button click, call data layer, update UI
+- `renderTodos()`: Render the current todo list to the DOM
+- Event handlers for user interactions
 
-- `addTodo(text)`: Add a new todo item to the data array
-  - Validates input is not empty
-  - Creates todo object with unique ID and text
-  - Adds to todos array
-  - Triggers re-render
+**Requirements Satisfied**: 
+- FR-1: Implements add todo operation
+- FR-2: Implements edit todo operation
+- FR-3: Implements delete todo operation
 
-- `editTodo(id, newText)`: Update an existing todo item
-  - Finds todo by ID
-  - Updates text property
-  - Triggers re-render
+### 4. Data Layer Component (JavaScript)
 
-- `deleteTodo(id)`: Remove a todo item from the list
-  - Finds todo by ID
-  - Removes from todos array
-  - Triggers re-render
+**Responsibility**: Manage the in-memory todo list data structure
 
-- `renderTodos()`: Update the DOM to display current todos
-  - Clears existing list display
-  - Iterates over todos array
-  - Creates DOM elements for each todo
-  - Attaches event listeners to Edit/Delete buttons
-
-- `initApp()`: Initialize the application
-  - Sets up event listeners
-  - Renders initial empty state
-
-**Requirements Satisfied**:
-- FR-001: `addTodo()` implements add functionality
-- FR-002: `editTodo()` implements edit functionality
-- FR-003: `deleteTodo()` implements delete functionality
-
-### 3. Data Layer Component (In-Memory Array)
-
-**Responsibility**: Store todo items during the browser session
-
-**Data Structure**:
-
-```javascript
-// Global todos array
-let todos = [];
-
-// Todo object structure
-{
-  id: Number,      // Unique identifier (timestamp-based)
-  text: String     // Todo item text content
-}
-```
+**Structure**:
+- Array of todo objects
+- Each todo object contains: `{ id, text }`
+- Simple counter for generating unique IDs
 
 **Operations**:
-- Create: Push new todo object to array
-- Read: Access todos array for rendering
-- Update: Modify todo object properties in array
-- Delete: Remove todo object from array using filter/splice
+- Add todo to array
+- Update todo text by ID
+- Remove todo from array by ID
+- Retrieve all todos
 
-**Requirements Satisfied**: All functional requirements (FR-001, FR-002, FR-003) require data storage
+**Requirements Satisfied**: Provides data management for FR-1, FR-2, FR-3
 
 ## Data Flow
 
-### Add Todo Flow (FR-001)
+### FR-1: Add Todo Flow
 
 1. User enters text in input field
 2. User clicks Add button
-3. Event listener triggers `addTodo(text)`
-4. New todo object created with unique ID
-5. Todo object pushed to `todos` array
-6. `renderTodos()` called to update display
-7. Input field cleared for next entry
+3. Application Logic validates input (non-empty)
+4. Application Logic calls Data Layer to add todo
+5. Data Layer adds todo object to array with unique ID
+6. Application Logic calls render function
+7. UI Component displays updated todo list
 
-### Edit Todo Flow (FR-002)
+### FR-2: Edit Todo Flow
 
 1. User clicks Edit button on a todo item
-2. Event listener triggers edit mode for that todo
-3. Todo text replaced with input field containing current text
-4. User modifies text and confirms (Enter key or button)
-5. Event listener triggers `editTodo(id, newText)`
-6. Todo object in array updated with new text
-7. `renderTodos()` called to update display
+2. Application Logic converts todo display to editable input
+3. User modifies text
+4. User confirms edit (blur or enter key)
+5. Application Logic calls Data Layer to update todo
+6. Data Layer updates todo text in array by ID
+7. Application Logic calls render function
+8. UI Component displays updated todo with new text
 
-### Delete Todo Flow (FR-003)
+### FR-3: Delete Todo Flow
 
 1. User clicks Delete button on a todo item
-2. Event listener triggers `deleteTodo(id)`
-3. Todo object removed from `todos` array
-4. `renderTodos()` called to update display
+2. Application Logic calls Data Layer to delete todo
+3. Data Layer removes todo from array by ID
+4. Application Logic calls render function
+5. UI Component displays updated todo list without deleted item
 
 ## Technology Stack
 
 ### HTML5
-- **Purpose**: Structure and markup
-- **Justification**: Standard web markup language, no alternatives needed
-- **Usage**: Define input field, buttons, and todo list container
+- **Purpose**: Structure and semantic markup
+- **Justification**: Standard web technology, no additional dependencies
+- **Usage**: Single index.html file
 
 ### CSS3
 - **Purpose**: Styling and layout
-- **Justification**: Standard styling language, sufficient for simple UI
-- **Usage**: Basic styling for clean, usable interface
+- **Justification**: Native browser support, sufficient for simple UI
+- **Usage**: Single styles.css file or embedded styles
 
 ### JavaScript (ES6+)
 - **Purpose**: Application logic and DOM manipulation
-- **Justification**: Native browser language, no framework needed for this scope
-- **Usage**: Implement all todo operations and UI updates
-- **Features Used**: 
-  - Array methods (push, filter, find, map)
-  - DOM API (getElementById, createElement, addEventListener)
-  - Template literals for dynamic content
-  - Arrow functions for concise syntax
+- **Justification**: Native browser support, no framework needed for three operations
+- **Usage**: Single app.js file
 
-### No External Dependencies
-- **No frameworks**: Vanilla JS sufficient for simple CRUD operations
-- **No libraries**: DOM API adequate for UI manipulation
-- **No build tools**: Static HTML/CSS/JS files run directly in browser
-- **No backend**: All functionality client-side only
-- **No storage**: In-memory array sufficient per requirements
+### Browser
+- **Purpose**: Runtime environment
+- **Justification**: No server required, runs entirely client-side
+- **Target**: Modern browsers (Chrome, Firefox, Safari, Edge)
 
 ## File Structure
 
 ```
 todo-app/
-├── index.html      # Main HTML structure
-├── styles.css      # Application styling
-└── app.js          # Application logic and data
+├── index.html      # UI Component - structure and layout
+├── styles.css      # Presentation Component - styling
+└── app.js          # Application Logic + Data Layer
 ```
 
-## Requirements Traceability
+## Component Interaction Diagram
 
-| Functional Requirement | Architectural Components | Implementation |
-|------------------------|-------------------------|----------------|
-| FR-001: Add Todo Item | UI Component (input + button)<br>Application Logic (`addTodo()`)<br>Data Layer (todos array) | User enters text, clicks Add, todo added to array, UI re-rendered |
-| FR-002: Edit Todo Item | UI Component (Edit button)<br>Application Logic (`editTodo()`)<br>Data Layer (todos array) | User clicks Edit, modifies text, todo updated in array, UI re-rendered |
-| FR-003: Delete Todo Item | UI Component (Delete button)<br>Application Logic (`deleteTodo()`)<br>Data Layer (todos array) | User clicks Delete, todo removed from array, UI re-rendered |
+```
+┌─────────────────────────────────────────┐
+│          Browser (User)                 │
+└──────────────┬──────────────────────────┘
+               │
+               │ User Actions
+               ▼
+┌─────────────────────────────────────────┐
+│      UI Component (HTML/DOM)            │
+│  - Input field                          │
+│  - Add button                           │
+│  - Todo list display                    │
+│  - Edit buttons                         │
+│  - Delete buttons                       │
+└──────────────┬──────────────────────────┘
+               │
+               │ DOM Events
+               ▼
+┌─────────────────────────────────────────┐
+│   Application Logic (JavaScript)        │
+│  - addTodo()                            │
+│  - editTodo(id)                         │
+│  - deleteTodo(id)                       │
+│  - renderTodos()                        │
+└──────────────┬──────────────────────────┘
+               │
+               │ Data Operations
+               ▼
+┌─────────────────────────────────────────┐
+│      Data Layer (JavaScript)            │
+│  - todos[] array                        │
+│  - CRUD operations                      │
+└─────────────────────────────────────────┘
+```
 
-## Non-Functional Requirements Addressed
+## Requirements Traceability Matrix
 
-### NFR-001: Usability
-- Simple, minimal UI with clear input and action buttons
-- Immediate visual feedback on all operations
-- Inline editing for intuitive experience
+| Functional Requirement | Architectural Component | Implementation Approach |
+|------------------------|-------------------------|-------------------------|
+| FR-1: Add Todo Item | Application Logic: `addTodo()`<br>Data Layer: Array push<br>UI: Input field + Add button | User enters text, clicks Add, todo added to array, list re-rendered |
+| FR-2: Edit Todo Item | Application Logic: `editTodo(id)`<br>Data Layer: Array update by ID<br>UI: Edit button + inline editing | User clicks Edit, text becomes editable, on save, array updated, list re-rendered |
+| FR-3: Delete Todo Item | Application Logic: `deleteTodo(id)`<br>Data Layer: Array splice by ID<br>UI: Delete button | User clicks Delete, todo removed from array, list re-rendered |
 
-### NFR-002: Performance
-- In-memory array operations are instantaneous
-- DOM manipulation limited to rendering list (efficient for <100 items)
-- No network calls or database queries
+## Design Constraints
 
-### NFR-003: Compatibility
-- Vanilla HTML/CSS/JS compatible with all modern browsers
-- No framework-specific compatibility issues
-- Standard ES6+ features supported in all target browsers
+### Included (Required by FR)
+- Add, edit, and delete operations
+- Display of todo list
+- User input validation (non-empty text)
 
-## Architecture Validation
+### Excluded (Out of Scope per requirements.md)
+- Data persistence (no localStorage, no database)
+- User authentication
+- Todo completion status
+- Prioritization or categorization
+- Search or filter
+- Sorting or reordering
+- Undo/redo
+- Backend API
+- Framework dependencies
 
-### Requirements Coverage
-- All three functional requirements (FR-001, FR-002, FR-003) mapped to components
-- No additional features beyond approved requirements
-- Architecture directly supports acceptance criteria
+## Non-Functional Considerations
 
-### Simplicity Verification
-- Three-layer architecture (UI, Logic, Data)
-- No unnecessary components or services
-- No external dependencies
-- No persistence mechanisms
-- No authentication or authorization
-- No backend or API layer
+### Simplicity
+- Minimal code, maximum clarity
+- No unnecessary abstractions
+- Single responsibility per function
 
-### Technology Appropriateness
-- Browser-based solution for simple UI requirements
-- Vanilla JS sufficient for CRUD operations
-- No framework overhead for minimal feature set
-- Static files deployable to any web server
+### Usability
+- Clear visual feedback for actions
+- Intuitive button placement
+- Simple, uncluttered interface
 
-## Conclusion
+### Browser Compatibility
+- Modern ES6+ JavaScript
+- Standard DOM APIs
+- CSS Grid or Flexbox for layout
 
-This architecture provides the minimum necessary structure to satisfy all three functional requirements for the Todo application. The simple three-layer design (UI, Logic, Data) using vanilla HTML/CSS/JavaScript is appropriate for the limited scope and demonstrates the SDLC process without introducing unnecessary complexity.
+## Architecture Verification
+
+- **FR-1 Satisfied**: Add operation fully supported through UI input, application logic, and data layer
+- **FR-2 Satisfied**: Edit operation fully supported through UI edit mode, application logic, and data update
+- **FR-3 Satisfied**: Delete operation fully supported through UI delete button, application logic, and data removal
+- **Simplicity Maintained**: No databases, no backend, no frameworks
+- **Scope Respected**: No features beyond the three approved operations
+- **Technology Appropriate**: Browser-based technologies suitable for the requirements
+
+## Architecture Approval
+
+This architecture is ready for Design Review phase.
+
+**Key Points for Review**:
+1. All three functional requirements are addressed
+2. Architecture is intentionally minimal
+3. No unnecessary complexity introduced
+4. Clear component boundaries defined
+5. Straightforward data flow for each operation
+6. Technology choices justified and appropriate

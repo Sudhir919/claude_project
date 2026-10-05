@@ -1,0 +1,16 @@
+{
+  "name": "todo-agentic-sdlc",
+  "version": "1.0.0",
+  "description": "Todo application demonstrating Agentic SDLC with Claude",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/**/*.test.js",
+    "test:app": "node --test tests/todo-app.test.js",
+    "test:sdlc": "node --test tests/sdlc/**/*.test.js",
+    "test:validation": "node --test tests/sdlc/validation.test.js",
+    "test:dry-run": "node .sdlc/create-pr.js --dry-run"
+  },
+  "keywords": ["agentic", "sdlc", "todo", "claude"],
+  "author": "",
+  "license": "MIT"
+}
